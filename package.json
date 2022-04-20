@@ -1,0 +1,19 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salimkarbm/natours.git"
+  },
+  "author": "salim imuzai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salimkarbm/natours/issues"
+  },
+  "homepage": "https://github.com/salimkarbm/natours#readme"
+}
