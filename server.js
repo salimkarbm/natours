@@ -1,15 +1,19 @@
-const mongoose = require('mongoose')
-const dotenv = require('dotenv')
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-dotenv.config()
-const app = require('./app')
+dotenv.config();
+const app = require('./app');
 
-const PORT = 8000
+const PORT = process.env.PORT || 8000;
 
-mongoose.connect(process.env.DATABASE, {}).then(() => {
-  console.log('db connection established')
-})
+let DB;
+if (process.env.NODE_ENV === 'development') {
+  DB = process.env.DATABASE;
+}
+mongoose.connect(DB, {}).then(() => {
+  console.log('db connection established');
+});
 
 app.listen(PORT, () => {
-  console.log(`server running on port: ${PORT}...`)
-})
+  console.log(`server running on port: ${PORT}...`);
+});
