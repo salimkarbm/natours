@@ -25,6 +25,7 @@ const importData = async () => {
   } catch (err) {
     console.log(err);
   }
+  // eslint-disable-next-line no-process-exit
   process.exit();
 };
 
@@ -35,6 +36,7 @@ const deleteData = async () => {
   } catch (err) {
     console.log(err);
   }
+  // eslint-disable-next-line no-process-exit
   process.exit();
 };
 
