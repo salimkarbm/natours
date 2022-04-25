@@ -16,7 +16,24 @@ exports.createTour = async (req, res) => {
 
 exports.getAllTours = async (req, res) => {
   try {
-    const tours = await Tour.find();
+    // filtering
+    const queryObj = { ...req.query };
+    const excludeValues = ['limit', 'fields', 'sort', 'page'];
+    excludeValues.forEach((el) => delete queryObj[el]);
+
+    // advance filtering
+    let queryString = JSON.stringify(queryObj);
+    queryString = queryString.replace(
+      /\b(gte|gt|lte|lt)\b/g,
+      (match) => `$${match}`
+    );
+
+    const query = Tour.find(JSON.parse(queryString));
+
+    // excute the query
+    const tours = await query;
+
+    // send response
     res.status(200).json({
       status: 'success',
       results: tours.length,
