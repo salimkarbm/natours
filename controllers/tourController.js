@@ -14,6 +14,13 @@ exports.createTour = async (req, res) => {
   }
 };
 
+exports.aliasToTours = async (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage';
+  req.query.fields = 'name,price,ratingsAverage,difficulty,summary';
+  next();
+};
+
 exports.getAllTours = async (req, res) => {
   try {
     // filtering
@@ -38,7 +45,7 @@ exports.getAllTours = async (req, res) => {
       query = query.sort('-createdAt');
     }
 
-    // limiting or projecting
+    // field limiting or projecting
     if (req.query.fields) {
       const fields = req.query.fields.split(',').join(' ');
       query = query.select(fields);
