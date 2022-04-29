@@ -34,7 +34,6 @@ exports.getAllTours = async (req, res) => {
       /\b(gte|gt|lte|lt)\b/g,
       (match) => `$${match}`
     );
-
     let query = Tour.find(JSON.parse(queryString));
 
     // sorting
@@ -59,10 +58,7 @@ exports.getAllTours = async (req, res) => {
     const skip = (page - 1) * limit;
 
     query = query.skip(skip).limit(limit);
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments();
-      if (skip >= numTours) throw new Error('page not found');
-    }
+
     // excute the query
     const tours = await query;
 
