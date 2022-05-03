@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel');
+const ApiFeatures = require('../utils/apiFeatures');
 
 exports.createTour = async (req, res) => {
   try {
@@ -23,44 +24,50 @@ exports.aliasToTours = async (req, res, next) => {
 
 exports.getAllTours = async (req, res) => {
   try {
-    // filtering
-    const queryObj = { ...req.query };
-    const excludeValues = ['limit', 'page', 'fields', 'sort'];
-    excludeValues.forEach((el) => delete queryObj[el]);
+    // // filtering
+    // const queryObj = { ...req.query };
+    // const excludeValues = ['limit', 'page', 'fields', 'sort'];
+    // excludeValues.forEach((el) => delete queryObj[el]);
 
-    // advance filtering
-    let queryString = JSON.stringify(queryObj);
-    queryString = queryString.replace(
-      /\b(gte|gt|lte|lt)\b/g,
-      (match) => `$${match}`
-    );
-    let query = Tour.find(JSON.parse(queryString));
+    // // advance filtering
+    // let queryString = JSON.stringify(queryObj);
+    // queryString = queryString.replace(
+    //   /\b(gte|gt|lte|lt)\b/g,
+    //   (match) => `$${match}`
+    // );
+    // let query = Tour.find(JSON.parse(queryString));
 
     // sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort('-createdAt');
-    }
+    // if (req.query.sort) {
+    //   const sortBy = req.query.sort.split(',').join(' ');
+    //   query = query.sort(sortBy);
+    // } else {
+    //   query = query.sort('-createdAt');
+    // }
 
-    // field limiting or projecting
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      query = query.select(fields);
-    } else {
-      query = query.select('-__v');
-    }
+    // // field limiting or projecting
+    // if (req.query.fields) {
+    //   const fields = req.query.fields.split(',').join(' ');
+    //   query = query.select(fields);
+    // } else {
+    //   query = query.select('-__v');
+    // }
 
-    // pagination
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 100;
-    const skip = (page - 1) * limit;
+    // // pagination
+    // const page = parseInt(req.query.page, 10) || 1;
+    // const limit = parseInt(req.query.limit, 10) || 100;
+    // const skip = (page - 1) * limit;
 
-    query = query.skip(skip).limit(limit);
+    // query = query.skip(skip).limit(limit);
 
     // excute the query
-    const tours = await query;
+    const features = new ApiFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limit()
+      .paginate();
+
+    const tours = await features.dbQuery;
 
     // send response
     res.status(200).json({
