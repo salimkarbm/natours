@@ -80,8 +80,11 @@ tourSchema.pre('/^find/', function (next) {
   this.find({ secretTour: { $ne: true } });
   next();
 });
-
 // tourSchema.post('/^find/', function (doc, next) {});
+tourSchema.pre('aggregate', function (next) {
+  next();
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
