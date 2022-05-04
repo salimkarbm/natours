@@ -45,10 +45,10 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       validate: {
         // this valadation only work when creating a new document
-        validator: function (val) {
+        validator(val) {
           return val < this.price;
         },
-        message: 'Discount price {{VALUE}} must be blelow  regular price',
+        message: 'Discount price {{VALUE}} must be below regular price',
       },
     },
 
@@ -97,7 +97,9 @@ tourSchema.pre('/^find/', function (next) {
   this.find({ secretTour: { $ne: true } });
   next();
 });
+
 // tourSchema.post('/^find/', function (doc, next) {});
+
 tourSchema.pre('aggregate', function (next) {
   next();
   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
