@@ -1,5 +1,12 @@
 const AppError = require('../utils/appError');
 
+const unhandledValidationErrorDB = (err) => {
+  const errors = Object.values(err.errors).map((el) => {
+    return el.message;
+  });
+  const message = `Invalid input data ${errors.join('. ')}.`;
+  return new AppError(message, '400');
+};
 const unhandledDuplicateFieldDB = (err) => {
   const value = err.message.match(/(["'])(\\?.)*?\1/)[0];
   const message = `Duplicate filed value: ${value} please use another value.`;
@@ -36,11 +43,14 @@ module.exports = (err, req, res, next) => {
     sendDevError(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = err;
-    if (error.name === ' CastError') {
+    if (error.name === 'CastError') {
       error = unhandledCastErrorDB(error);
     }
     if (error.code === 11000) {
       error = unhandledDuplicateFieldDB(error);
+    }
+    if (error.name === 'ValidationError') {
+      error = unhandledValidationErrorDB(error);
     }
     sendProError(error, res);
   }
