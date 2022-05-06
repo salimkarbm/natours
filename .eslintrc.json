@@ -14,6 +14,7 @@
     "no-param-reassign": "off",
     "object-shorthand": "off",
     "class-methods-use-this": "off",
+    "consistent-return": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
   }
 }

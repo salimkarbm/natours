@@ -1,6 +1,7 @@
 const Tour = require('../models/tourModel');
 const ApiFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.aliasToTours = async (req, res, next) => {
   req.query.limit = '5';
@@ -9,7 +10,7 @@ exports.aliasToTours = async (req, res, next) => {
   next();
 };
 
-exports.createTour = catchAsync(async (req, res) => {
+exports.createTour = catchAsync(async (req, res, next) => {
   const newTour = await Tour.create({ ...req.body });
   res.status(201).json({
     status: 'success',
@@ -19,7 +20,7 @@ exports.createTour = catchAsync(async (req, res) => {
   });
 });
 
-exports.getAllTours = catchAsync(async (req, res) => {
+exports.getAllTours = catchAsync(async (req, res, next) => {
   // excute the query
   const features = new ApiFeatures(Tour.find(), req.query)
     .filter()
@@ -37,9 +38,10 @@ exports.getAllTours = catchAsync(async (req, res) => {
   });
 });
 
-exports.getTour = catchAsync(async (req, res) => {
-  // try {
+exports.getTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id);
+  if (!tour)
+    return next(new AppError(`No Tout Found with ID:${req.params.id}`, 404));
   res.status(200).json({
     status: 'success',
     results: tour.length,
@@ -47,17 +49,16 @@ exports.getTour = catchAsync(async (req, res) => {
       tour,
     },
   });
-  // } catch (err) {
-  //   res.status(404).json({ status: 'fail', message: err });
-  // }
 });
 
-exports.updateTour = catchAsync(async (req, res) => {
+exports.updateTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndUpdate(
     req.params.id,
     { ...req.body },
     { new: true, runValidators: true }
   );
+  if (!tour)
+    return next(new AppError(`No Tout Found with ID:${req.params.id}`, 404));
   res.status(200).json({
     status: 'success',
     data: {
@@ -66,15 +67,17 @@ exports.updateTour = catchAsync(async (req, res) => {
   });
 });
 
-exports.deleteTour = catchAsync(async (req, res) => {
-  await Tour.findByIdAndDelete(req.params.id);
+exports.deleteTour = catchAsync(async (req, res, next) => {
+  const tour = await Tour.findByIdAndDelete(req.params.id);
+  if (!tour)
+    return next(new AppError(`No Tout Found with ID:${req.params.id}`, 404));
   res.status(204).json({
     status: 'success',
     data: null,
   });
 });
 
-exports.getTourStats = catchAsync(async (req, res) => {
+exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
     {
       $match: { ratingsAverage: { $gte: 4.5 } },
@@ -105,7 +108,7 @@ exports.getTourStats = catchAsync(async (req, res) => {
   });
 });
 
-exports.getMonthlyPlan = catchAsync(async (req, res) => {
+exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = parseInt(req.params.year, 10);
 
   const plan = await Tour.aggregate([
