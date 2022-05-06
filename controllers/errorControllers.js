@@ -1,5 +1,10 @@
 const AppError = require('../utils/appError');
 
+const unhandledDuplicateFieldDB = (err) => {
+  const value = err.message.match(/(["'])(\\?.)*?\1/)[0];
+  const message = `Duplicate filed value: ${value} please use another value.`;
+  return new AppError(message, '400');
+};
 const unhandledCastErrorDB = (err) => {
   const message = `Invalid ${err.path}:${err.value}.`;
   return new AppError(message, '400');
@@ -33,6 +38,9 @@ module.exports = (err, req, res, next) => {
     let error = err;
     if (error.name === ' CastError') {
       error = unhandledCastErrorDB(error);
+    }
+    if (error.code === 11000) {
+      error = unhandledDuplicateFieldDB(error);
     }
     sendProError(error, res);
   }
