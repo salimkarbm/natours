@@ -42,7 +42,7 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendDevError(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    let error = err;
+    let error = { ...err };
     if (error.name === 'CastError') {
       error = unhandledCastErrorDB(error);
     }
