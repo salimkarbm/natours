@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 process.on('unhandleRejection', (err) => {
   console.log(err.name, err.message);
-  console.log('Uncaught Bxception Shuttin Down...');
+  console.log('Uncaught Exceptions Shutting Down...');
   // eslint-disable-next-line no-process-exit
   process.exit(1);
 });
