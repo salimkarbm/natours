@@ -10,6 +10,7 @@
     "ecmaVersion": "latest"
   },
   "rules": {
+    "spaced-comment": "off",
     "func-names": "off",
     "no-param-reassign": "off",
     "object-shorthand": "off",
@@ -17,6 +18,8 @@
     "consistent-return": "off",
     "no-underscore-dangle": "off",
     "no-return-await": "off",
+    "no-process-exit": "off",
+    "prefer-destructuring": ["error", { "object": true, "array": false }],
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
   }
 }
