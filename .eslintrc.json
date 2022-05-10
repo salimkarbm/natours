@@ -16,6 +16,7 @@
     "class-methods-use-this": "off",
     "consistent-return": "off",
     "no-underscore-dangle": "off",
+    "no-return-await": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "req|res|next|val" }]
   }
 }
