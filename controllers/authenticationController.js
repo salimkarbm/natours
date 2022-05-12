@@ -63,7 +63,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
   // verifiy token
-  const decoded = await promisify(jwt.verify)(token, process.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
   //check if user still exists
   const currentUser = await User.findById(decoded.id);
@@ -73,7 +73,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
   //check if user change password after the token was issue
-  if (currentUser.passwordChangedAt(decoded.iai)) {
+  if (currentUser.changePasswordAfter(decoded.iat)) {
     return next(
       new AppError('User Recently changed password! Please login again', 401)
     );

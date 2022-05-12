@@ -16,6 +16,8 @@ const PORT = process.env.PORT || 8000;
 let DB;
 if (process.env.NODE_ENV === 'development') {
   DB = process.env.DATABASE;
+} else if (process.env.NODE_ENV === 'production') {
+  DB = process.env.DATABASE;
 }
 mongoose
   .connect(DB, {})
