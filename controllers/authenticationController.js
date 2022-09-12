@@ -44,7 +44,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorect email or password', 401));
   }
   createSendToken(user, 200, res)
-  
+
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -157,7 +157,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   //Login user
   createSendToken(user, 200, res)
-  
+
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {

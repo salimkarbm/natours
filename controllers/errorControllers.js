@@ -5,7 +5,7 @@ const handleValidationErrorDB = (err) => {
     return el.message;
   });
   const message = `Invalid input data ${errors.join('. ')}.`;
-  return new AppError(message, '400');
+  return new AppError(message, 400);
 };
 const handleDuplicateFieldDB = (err) => {
   const value = err.message.match(/(["'])(\\?.)*?\1/)[0];

@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 8000;
 
 let DB;
 if (process.env.NODE_ENV === 'development') {
-  DB = process.env.DATABASE;
+  DB = process.env.LOCAL_DB;
 } else if (process.env.NODE_ENV === 'production') {
   DB = process.env.DATABASE;
 }
